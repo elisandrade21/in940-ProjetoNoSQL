@@ -66,6 +66,11 @@ db.trips.aggregate([
     {$limit : 20} 
 ])
 
+// retornar o passageiro que tem sobrenome moura
+
+db.trips.createIndex({name: "text"})
+
+db.trips.find({ $text: { $search: "'moura'" }})
 
 
 
