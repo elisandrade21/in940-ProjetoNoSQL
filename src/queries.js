@@ -7,7 +7,7 @@ print(db.trips.count({ rating: 5 }) / db.trips.count())
 // listar passageiros das viagens com 12 ou mais quilometros de distância
 db.trips.find({ distance: { $gte: 12 } }, { 'passenger.name': 1, distance: 1 }).pretty()
 
-// listar os estados por maior quantidade de viagens feitas
+// listar os estados e a quantidade de viajens feitas, ordenado pela quantidade
 db.trips.aggregate([{ $group: { _id: '$pickupAddress.state', count: { $sum: 1 } } }, { $sort: { count: -1 } }])
 
 // listar motoristas e seus estados, ordenados pelo faturamento do motorista
