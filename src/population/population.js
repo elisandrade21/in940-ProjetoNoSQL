@@ -77,7 +77,7 @@ rawDrivers.forEach(
                 city: rawDriver.location.city,
                 street: rawDriver.location.street
             },
-            phone: rawDriver.phone,
+            phone: Math.random() < 0.5 ? [rawDriver.phone, rawDriver.cell] : [rawDriver.phone],
             cnh: {
                 number: randomCnh(),
                 expire: randomDateGenerator(
@@ -110,7 +110,7 @@ rawPassengers.forEach(
                 city: rawPassenger.location.city,
                 street: rawPassenger.location.street
             },
-            phone: rawPassenger.phone
+            phone: Math.random() < 0.5 ? [rawPassenger.phone, rawPassenger.cell] : [rawPassenger.phone]
         })
 )
 const passengersStateBuckets = bucketGenerator(
