@@ -101,12 +101,3 @@ db.trips.createIndex({'passenger.name': "text"})
 // retornar os passageiros que tem sobrenome moura
 db.trips.find({ $text: { $search: "'moura'" }}, {passenger: 1}).pretty()
 
-//SIZE
-//Counts and returns the total the number of items in an array.
-// OBS: A coleção carservice não tem array
-// Utilizando a movieDetails
-// Listar o os países, o título, os gêneros e o diretor dos filmes que possuem 2 países
-db.movieDetails.find( { countries: { $size: 2 } }, {_id: -0, 'title': 1, 'genres': 1, director: 1, countries: 1});
-
-
-
