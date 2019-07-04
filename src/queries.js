@@ -95,6 +95,27 @@ db.trips.aggregate([
     { $sort: { count: -1 } }
 ])
 
+// UNWIND
+// Operaçao sobre arrays
+
+// Deconstructs an array field from the input documents to
+// output a document for each element. Each output 
+// document is the input document with the value of the array 
+//  field replaced by the element.
+// Mostra um registro (repetindo os valores) para cada linha do array
+// Utilizando db.movieDatails
+db.movieDetails.aggregate(
+{ $unwind : "$countries" },
+{ $project : {
+        year : 1 ,
+        title : 1 ,
+        director : 1,
+        countries : 1
+    }}
+);
+
+
+
 //criar um índice
 db.trips.createIndex({'passenger.name': "text"})
 
