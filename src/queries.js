@@ -1,13 +1,20 @@
+// USE
+// Para mudar para outro banco de dados, usamos o comando "use nomeDoBanco". Se o banco de dados não 
+//existir o MongoDB o criará assim que forem incluídos dados nele. O Shell deve apresentar a  
+// mensagem: switched to db meuMongoDB
 // use carservice
+// 
 db = db.getSiblingDB('carservice')
 
 // proporção de viagens cujo rating foi 5
 print(db.trips.count({ rating: 5 }) / db.trips.count())
 
+// FIND
+// Executes a query and returns the first batch of results and the cursor id, from which the client can construct a cursor. 
 // listar passageiros das viagens com 12 ou mais quilometros de distância
-db.trips.find({ distance: { $gte: 12 } }, {'passenger.name': 1, 'distance': 1}).pretty()
+db.trips.find({ distance: { $gte: 12 } }, { 'passenger.name': 1, distance: 1 }).pretty()
 
-// listar os estados por maior quantidade de viagens feitas
+// listar os estados e a quantidade de viajens feitas, ordenado pela quantidade
 db.trips.aggregate([{ $group: { _id: '$pickupAddress.state', count: { $sum: 1 } } }, { $sort: { count: -1 } }])
 
 // listar motoristas e seus estados, ordenados pelo faturamento do motorista
@@ -66,6 +73,61 @@ db.trips.aggregate([
     {$limit : 20} 
 ])
 
+// contar viagens cuja a cidade do passageiro é igual a do motorista.
+db.trips.count({ $expr: { $eq: ['$driver.address.city', '$passenger.address.city'] } })
+
+// contar a quantidade de viagens por estado cujo o valor final é maior que o valor estimado
+db.trips.aggregate([
+    {
+        $group: {
+            _id: '$pickupAddress.state',
+            count: {
+                $sum: {
+                    $cond: {
+                        if: { $gt: ['$estimatedValue', '$finalValue'] },
+                        then: 1,
+                        else: 0
+                    }
+                }
+            }
+        }
+    },
+    { $sort: { count: -1 } }
+])
+
+// UNWIND
+// Operaçao sobre arrays
+
+// Deconstructs an array field from the input documents to
+// output a document for each element. Each output 
+// document is the input document with the value of the array 
+//  field replaced by the element.
+// Mostra um registro (repetindo os valores) para cada linha do array
+// Utilizando db.movieDatails
+db.movieDetails.aggregate(
+{ $unwind : "$countries" },
+{ $project : {
+        _id : 0,
+        year : 1 ,
+        title : 1 ,
+        director : 1,
+        countries : 1
+    }}
+);
+
+//SIZE
+// Operação sobre arrays
+
+//Counts and returns the total the number of items in an array.
+// OBS: A coleção carservice não tem array
+// Utilizando a movieDetails
+// Listar o os países, o título, os gêneros e o diretor dos filmes que possuem 2 países
+db.movieDetails.find( { countries: { $size: 2 } }, {_id: -0, 'title': 1, 'genres': 1, director: 1, countries: 1});
 
 
+//criar um índice
+db.trips.createIndex({'passenger.name': "text"})
+
+// retornar os passageiros que tem sobrenome moura
+db.trips.find({ $text: { $search: "'moura'" }}, {passenger: 1}).pretty()
 
