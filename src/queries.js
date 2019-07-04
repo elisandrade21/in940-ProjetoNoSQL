@@ -10,7 +10,7 @@ db = db.getSiblingDB('carservice')
 print(db.trips.count({ rating: 5 }) / db.trips.count())
 
 // FIND
-// Executes a query and returns the first batch of results and the cursor id, from which the client can construct a cursor.
+// Executes a query and returns the first batch of results and the cursor id, from which the client can construct a cursor. 
 // listar passageiros das viagens com 12 ou mais quilometros de distância
 db.trips.find({ distance: { $gte: 12 } }, { 'passenger.name': 1, distance: 1 }).pretty()
 
@@ -115,6 +115,14 @@ db.movieDetails.aggregate(
     }}
 );
 
+//SIZE
+// Operação sobre arrays
+
+//Counts and returns the total the number of items in an array.
+// OBS: A coleção carservice não tem array
+// Utilizando a movieDetails
+// Listar o os países, o título, os gêneros e o diretor dos filmes que possuem 2 países
+db.movieDetails.find( { countries: { $size: 2 } }, {_id: -0, 'title': 1, 'genres': 1, director: 1, countries: 1});
 
 
 //criar um índice
