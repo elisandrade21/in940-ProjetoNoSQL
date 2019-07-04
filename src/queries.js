@@ -107,6 +107,7 @@ db.trips.aggregate([
 db.movieDetails.aggregate(
 { $unwind : "$countries" },
 { $project : {
+        _id : 0,
         year : 1 ,
         title : 1 ,
         director : 1,
